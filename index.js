@@ -1,5 +1,5 @@
 import { genNodeAPI } from "arseeding-js";
-import { readdirSync, readFile } from "fs";
+import { readdirSync, readFileSync, readFile } from "fs";
 
 const run = async () => {
     const arseedUrl = 'https://arseed.web3infra.dev'
@@ -8,22 +8,23 @@ const run = async () => {
         tags: [{name: 'Content-Type', value: 'image/png'}]
     }
     
-    const instance = genNodeAPI('YOUR PRIVATE KEY')
+    const instance = genNodeAPI('');
     
     const path = "../../Downloads/demoar/";
     const files = readdirSync(path);
-    files.forEach(file => {
+    for (const file of files) {
+        
         console.log("path:", path + file);
-        readFile(path + file, async (err, data) => {
-            
-            console.log(data);
-            const res = await instance.sendAndPay(arseedUrl, data, payCurrencyTag, options);
-            console.log('res', res);
-            
-        })
-    })
+        
+        const data = readFileSync(path + file);
+        console.log(data);
+        
+        const res = await instance.sendAndPay(arseedUrl, data, payCurrencyTag, options);
+        console.log('res', res);
+        
+    }
     
     
 }
 
-await run();
+run().then();
